@@ -1,5 +1,6 @@
 import random
 
+
 def display_board(board, player1_marker, player2_marker):
     print("\n" * 100)
     print(f'Player 1: {player1_marker} | Player 2: {player2_marker}')
@@ -11,23 +12,31 @@ def display_board(board, player1_marker, player2_marker):
     print(f' {board[0][0]} | {board[1][0]} | {board[2][0]} ')
     print('   |   |   ')
 
+
 def player_input():
+    mode = ''
+    while mode not in ['1', '2']:
+        mode = input("Enter 1 to play against another player or 2 to play against the computer: ")
+        if mode not in ['1', '2']:
+            print("Invalid choice. Please choose '1' for two players or '2' for computer opponent.")
+
     marker = ''
     while marker != 'x' and marker != 'o':
         marker = input("Player 1, please choose 'X' or 'O': ").lower()
-        if marker == 'x':
-            player_2 = 'o'
-        elif marker == 'o':
-            player_2 = 'x'
-        else:
-            print("Invalid choice. Please choose 'X' or 'O'.")
-    return marker.upper(), player_2.upper()
+
+    if marker == 'x':
+        player_2 = 'o'
+    else:
+        player_2 = 'x'
+
+    return marker.upper(), player_2.upper(), mode
+
 
 def place_marker(board, marker, row, col):
     board[row][col] = marker
 
-def win_check(board, mark):
 
+def win_check(board, mark):
     for row in board:
         if row.count(mark) == 3:
             return True
@@ -42,17 +51,21 @@ def win_check(board, mark):
         return True
     return False
 
+
 def choose_first():
     return 'player 1' if random.randint(0, 1) == 0 else 'player 2'
 
+
 def space_check(board, row, col):
     return board[row][col] == ' '
+
 
 def full_board_check(board):
     for row in board:
         if ' ' in row:
             return False
     return True
+
 
 def player_choice(board, player_name):
     position = None
@@ -73,6 +86,12 @@ def player_choice(board, player_name):
             print("Please enter a valid number between 1 and 9.")
     return row, col
 
+
+def computer_choice(board):
+    available_positions = [(r, c) for r in range(3) for c in range(3) if space_check(board, r, c)]
+    return random.choice(available_positions) if available_positions else None
+
+
 def replay():
     choice = ''
     while choice not in ['y', 'n']:
@@ -80,6 +99,7 @@ def replay():
         if choice not in ['y', 'n']:
             print("Invalid input. Please enter 'y' for Yes or 'n' for No.")
     return choice == 'y'
+
 
 def start_game():
     choice = ''
@@ -89,12 +109,13 @@ def start_game():
             print("Invalid input. Please enter 'y' for Yes or 'n' for No.")
     return choice == 'y'
 
+
 # Main game
 print('Welcome to Tic Tac Toe Game!')
 
 while True:
     theBoard = [[' ' for _ in range(3)] for _ in range(3)]
-    player1_marker, player2_marker = player_input()
+    player1_marker, player2_marker, game_mode = player_input()
     turn = choose_first()
     print(turn + ' will go first.')
 
@@ -117,15 +138,19 @@ while True:
                     break
                 else:
                     turn = 'player 2'
-
         else:
-            display_board(theBoard, player1_marker, player2_marker)
-            row, col = player_choice(theBoard, 'Player 2')
+            if game_mode == '1':
+                display_board(theBoard, player1_marker, player2_marker)
+                row, col = player_choice(theBoard, 'Player 2')
+            else:
+                row, col = computer_choice(theBoard)
+                print(f'Computer chooses position: {row}, {col}')
+
             place_marker(theBoard, player2_marker, row, col)
 
             if win_check(theBoard, player2_marker):
                 display_board(theBoard, player1_marker, player2_marker)
-                print('Congratulations! Player 2 won the game!')
+                print('Congratulations! Player 2 won the game!' if game_mode == '1' else 'The computer won!')
                 game_on = False
             else:
                 if full_board_check(theBoard):
