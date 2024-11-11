@@ -32,4 +32,4 @@ Welcome to the **Tic Tac Toe Game**! This is a simple, interactive game where tw
 4. Run the game by executing the following command:
 
    ```bash
-   python tic_tac_toe.py
+   python main.py
