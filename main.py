@@ -156,7 +156,7 @@ while True:
 
             if win_check(theBoard, player2_marker):  # Check if Player 2 wins (or computer wins)
                 display_board(theBoard, player1_marker, player2_marker)
-                print('Congratulations! Player 2 won the game!' if game_mode == '1' else 'The computer won!')
+                print('Congratulations!  Player 2 won the game!' if game_mode == '1' else 'The computer won!')
                 game_on = False
             else:
                 if full_board_check(theBoard):  # Check for draw
